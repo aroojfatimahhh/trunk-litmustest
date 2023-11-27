@@ -11,19 +11,22 @@ plugins:
 runtimes:
   enabled:
 lint:
+  definitions:
+    - name: pmd
+      files: [java]
+      commands:
+        - output: sarif
+          success_codes: [0, 1, 4]
+          run: pmd-bin-7.0.0-rc4/bin/pmd check -d ${target} -R rulesets/java/quickstart.xml -f sarif
+          read_output_from: stdout
   enabled:
-    - bandit@1.7.5
-    - black@23.9.1
     - checkov@3.0.25
     - eslint@8.53.0
-    - isort@5.12.0
-    - prettier@3.0.3
-    - ruff@0.1.4
     - trivy@0.47.0
     - trufflehog@3.62.1
-    - yamllint@1.32.0
     - git-diff-check
     - pylint@3.0.2
+    - pmd@SYSTEM
 actions:
   disabled:
     - trunk-announce

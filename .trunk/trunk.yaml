@@ -19,6 +19,16 @@ lint:
           success_codes: [0, 1, 4]
           run: pmd-bin-7.0.0-rc4/bin/pmd check -d ${target} -R rulesets/java/quickstart.xml -f sarif
           read_output_from: stdout
+
+    - name: cppcheck
+      files: [c++-source]
+      commands:
+        - output: regex
+          parse_regex: '((?P<path>.*):(?P<line>\d+):(?P<col>\d+): \[(?P<severity>.*)\] (?P<message>.*) \((?P<code>.*)\))'
+          success_codes: [0]
+          run: "cppcheck --enable=all ${target} --template='{file}:{line}:{column}: [error] {message} ({id})'"
+          read_output_from: stderr
+
   enabled:
     - checkov@3.0.25
     - eslint@8.53.0
@@ -27,6 +37,7 @@ lint:
     - git-diff-check
     - pylint@3.0.2
     - pmd@SYSTEM
+    - cppcheck@SYSTEM
 actions:
   disabled:
     - trunk-announce
